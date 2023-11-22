@@ -1,0 +1,75 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Company example • Pico.css</title>
+	<meta name="description" content="A classic company or blog layout with a sidebar. Built with Pico CSS." />
+	<!-- <link rel="shortcut icon" href="https://picocss.com/favicon.ico" /> -->
+	{{template "superglobals" .}}
+</head>
+
+<body>
+	<!-- Hero -->
+	<div class="hero" data-theme="dark">
+		<nav class="container-fluid">
+			<ul>
+				<li>
+					<a href="/" class="contrast"><strong>SuperTiny</strong></a>
+				</li>
+			</ul>
+			<ul>
+				<li>
+					<details role="list" dir="rtl">
+						<summary aria-haspopup="listbox" role="link" class="contrast"> &#9881;
+						</summary>
+						<ul role="listbox">
+							<li><a href="/login" data-theme-switcher="auto">Login</a></li>
+						</ul>
+					</details>
+				</li>
+			</ul>
+		</nav>
+
+	</div>
+	<!-- ./ Hero -->
+
+	<!-- Main -->
+	<main class="container">
+		{{ template "content" . }}
+	</main>
+	<!-- ./ Main -->
+
+	<!-- Subscribe -->
+	<section aria-label="Subscribe example">
+		<div class="container">
+			<article>
+				<hgroup>
+					<h2>Subscribe</h2>
+					<h3>Litora torquent per conubia nostra</h3>
+				</hgroup>
+				<form class="grid">
+					<input type="text" id="firstname" name="firstname" placeholder="First name"
+						aria-label="First name" required />
+					<input type="email" id="email" name="email" placeholder="Email address"
+						aria-label="Email address" required />
+					<button type="submit" onclick="event.preventDefault()">Subscribe</button>
+				</form>
+			</article>
+		</div>
+	</section>
+	<!-- ./ Subscribe -->
+
+	<!-- Footer -->
+	<footer class="container">
+		<small>Built with <a href="https://picocss.com">Pico</a> •
+			<a href="https://github.com/picocss/examples/tree/master/v1-company/">Source code</a></small>
+	</footer>
+	<!-- ./ Footer -->
+
+</body>
+
+</html>
+{{end}}
