@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/fridauxd/cht/app"
+	"github.com/6oof/chewbie/app"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"

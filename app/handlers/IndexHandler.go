@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/fridauxd/cht/app/helpers"
+	"github.com/6oof/chewbie/app/helpers"
 	_ "github.com/mattn/go-sqlite3"
 )
 

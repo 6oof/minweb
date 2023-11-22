@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/fridauxd/cht/app/helpers"
+	"github.com/6oof/chewbie/app/helpers"
 )
 
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
