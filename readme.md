@@ -9,3 +9,6 @@ We're using https://sqlc.dev/ as query builder. to get familiar with sqlc go to 
 make sure the fuirst template in the slice has
 `{{define "base"}}{{end}}`
 if this is not the case it won't render properly.
+
+# Killing the process when it fails
+fuser -k 8080/tcp
