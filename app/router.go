@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/fridauxd/cht/app/handlers"
+	"github.com/6oof/chewbie/app/handlers"
 
 	"github.com/go-chi/chi/v5"
 )

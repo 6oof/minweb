@@ -1,4 +1,4 @@
-module github.com/fridauxd/cht
+module github.com/6oof/chewbie
 
 go 1.20
 

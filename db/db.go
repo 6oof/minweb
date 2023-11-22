@@ -5,7 +5,7 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 
-	"github.com/fridauxd/cht/db/sqlc"
+	"github.com/6oof/chewbie/db/sqlc"
 )
 
 var Queries *sqlc.Queries
