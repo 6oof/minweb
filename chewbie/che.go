@@ -10,24 +10,32 @@ import (
 	"time"
 
 	"github.com/6oof/chewbie/app"
-	"github.com/go-chi/chi/v5"
-
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/gorilla/csrf"
+	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
+	"github.com/gorilla/securecookie"
 )
 
 type Chewbie struct {
-	Router *chi.Mux
+	Router *mux.Router
 }
 
 func ChewbieInit() *Chewbie {
-	r := chi.NewRouter()
+	r := mux.NewRouter()
 
-	r.Use(middleware.Logger)
-	fs := http.FileServer(http.Dir("static"))
-	r.Handle("/static/*", http.StripPrefix("/static/", fs))
+	r.Use(panicRecoverMiddleware)
+	r.Use(loggingMiddleware)
+	r.Use(compressResponseMiddleware)
 
+	// CSRF protection
+	csrfKey := securecookie.GenerateRandomKey(32)
+	csrfMiddleware := csrf.Protect(csrfKey, csrf.Secure(false), csrf.CookieName("ccsrf")) // Set Secure to true in production
+	r.Use(csrfMiddleware)
+
+	// Add your routes as needed
+	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	app.RegisterRoutes(r)
-
+	// Apply CSRF protection to all routes
 	Chewbie := &Chewbie{
 		Router: r,
 	}
@@ -35,54 +43,64 @@ func ChewbieInit() *Chewbie {
 	return Chewbie
 }
 
+func loggingMiddleware(next http.Handler) http.Handler {
+	return handlers.CombinedLoggingHandler(os.Stdout, next)
+}
+
+func panicRecoverMiddleware(next http.Handler) http.Handler {
+	return handlers.RecoveryHandler()(next)
+}
+
+func compressResponseMiddleware(next http.Handler) http.Handler {
+	return handlers.CompressHandler(next)
+}
+
 func ChewbieServe(port string) {
 	c := ChewbieInit()
-	// The HTTP Server
-	server := &http.Server{Addr: port, Handler: c.Router}
 
-	// Server run context
-	serverCtx, serverStopCtx := context.WithCancel(context.Background())
+	// Create a server with timeouts
+	server := &http.Server{
+		Addr:         port,
+		WriteTimeout: time.Second * 15,
+		ReadTimeout:  time.Second * 15,
+		IdleTimeout:  time.Second * 60,
+		Handler:      c.Router,
+	}
 
 	// Listen for syscall signals for process to interrupt/quit
 	sig := make(chan os.Signal, 1)
-	signal.Notify(sig, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	signal.Notify(sig, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+
 	go func() {
 		<-sig
 
-		// Shutdown signal with grace period of 30 seconds
-		shutdownCtx, _ := context.WithTimeout(serverCtx, 30*time.Second)
-
-		go func() {
-			<-shutdownCtx.Done()
-			if shutdownCtx.Err() == context.DeadlineExceeded {
-				log.Fatal("graceful shutdown timed out.. forcing exit.")
-			}
-		}()
+		// Create a deadline to wait for.
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
+		defer cancel()
 
 		// Trigger graceful shutdown
-		err := server.Shutdown(shutdownCtx)
+		err := server.Shutdown(ctx)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
-		serverStopCtx()
 	}()
 
-	// Create a custom logger without date and time
+	// Start the server in a goroutine so that it doesn't block.
+	go func() {
+		err := server.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			log.Fatal(err)
+		}
+	}()
 
-	art := "[̲̅$̲̅(̲̅ιο̲̅̅)̲̅$̲̅] [̲̅$̲̅(̲̅ιο̲̅̅)̲̅$̲̅] [̲̅$̲̅(̲̅ιο̲̅̅)̲̅$̲̅] [̲̅$̲̅(̲̅ιο̲̅̅)̲̅$̲̅] [̲̅$̲̅(̲̅ιο̲̅̅)̲̅$̲̅]"
-	logger := log.New(os.Stdout, "", 0)
+	log.Printf("Server running on port %s\n", port)
 
-	// Use the custom logger for subsequent log messages
+	// Block until an interrupt signal is received.
+	<-sig
+	log.Println("Shutting down...")
 
-	logger.Print(art)
-	logger.Print("")
-	logger.Print("Server running on port ", port)
-	logger.Print("")
-	logger.Print(art)
-
-	err := server.ListenAndServe()
-	if err != nil && err != http.ErrServerClosed {
-		log.Fatal(err)
-	}
-
+	// Optionally, you could run server.Shutdown in a goroutine
+	// and block on <-ctx.Done() if your application should wait
+	// for other services to finalize based on context cancellation.
+	log.Println("Server gracefully stopped.")
 }

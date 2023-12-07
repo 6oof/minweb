@@ -2,12 +2,10 @@ package app
 
 import (
 	"github.com/6oof/chewbie/app/handlers"
-
-	"github.com/go-chi/chi/v5"
+	"github.com/gorilla/mux"
 )
 
-func RegisterRoutes(r *chi.Mux) {
-	r.Get("/", handlers.HandleIndex)
-	r.Get("/login", handlers.HandleLogin)
-	r.Post("/login", handlers.HandleLoginPost)
+func RegisterRoutes(r *mux.Router) {
+	r.HandleFunc("/", handlers.HandleIndex).Methods("GET")
+
 }
