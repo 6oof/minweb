@@ -12,3 +12,6 @@ if this is not the case it won't render properly.
 
 # Killing the process when it fails
 fuser -k 8080/tcp
+
+
+implement session auth

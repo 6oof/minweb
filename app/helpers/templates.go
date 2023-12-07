@@ -12,6 +12,10 @@ func customUppercase(str string) string {
 	return strings.ToUpper(str)
 }
 
+var customTemplateFuncs = template.FuncMap{
+	"customUppercase": customUppercase,
+}
+
 func RenderPage(files []string, name string, data interface{}) string {
 	for i, v := range files {
 		files[i] = "./templates/" + v + ".go.html"
@@ -23,9 +27,7 @@ func RenderPage(files []string, name string, data interface{}) string {
 	ts := template.New("")
 
 	// Register your custom template function
-	ts.Funcs(template.FuncMap{
-		"customUppercase": customUppercase,
-	})
+	ts.Funcs(customTemplateFuncs)
 
 	// Parse the template files
 	ts, err := ts.ParseFiles(completeFiles...)
@@ -48,9 +50,7 @@ func RenderFragment(files []string, name string, data interface{}) string {
 	ts := template.New("")
 
 	// Register your custom template function
-	ts.Funcs(template.FuncMap{
-		"customUppercase": customUppercase,
-	})
+	ts.Funcs(customTemplateFuncs)
 
 	// Parse the template files
 	ts, err := ts.ParseFiles(files...)
