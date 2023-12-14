@@ -1,4 +1,4 @@
-package chew
+package stubs
 
 import (
 	"context"
@@ -16,11 +16,11 @@ import (
 	"github.com/gorilla/securecookie"
 )
 
-type Chewbie struct {
+type MiniWeb struct {
 	Router *mux.Router
 }
 
-func ChewbieInit() *Chewbie {
+func MbinInit() *MiniWeb {
 	r := mux.NewRouter()
 
 	r.Use(panicRecoverMiddleware)
@@ -36,7 +36,7 @@ func ChewbieInit() *Chewbie {
 	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	app.RegisterRoutes(r)
 	// Apply CSRF protection to all routes
-	Chewbie := &Chewbie{
+	Chewbie := &MiniWeb{
 		Router: r,
 	}
 
@@ -55,8 +55,8 @@ func compressResponseMiddleware(next http.Handler) http.Handler {
 	return handlers.CompressHandler(next)
 }
 
-func ChewbieServe(port string) {
-	c := ChewbieInit()
+func MbinServe(port string) {
+	c := MbinInit()
 
 	// Create a server with timeouts
 	server := &http.Server{

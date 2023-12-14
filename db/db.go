@@ -2,16 +2,22 @@ package db
 
 import (
 	"database/sql"
-
-	_ "github.com/mattn/go-sqlite3"
-
 	"github.com/6oof/chewbie/db/sqlc"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var Queries *sqlc.Queries
 
-func init() {
-	db, err := sql.Open("sqlite3", "db.db")
+func NewDB(dataSourceName string) (*sql.DB, error) {
+	db, err := sql.Open("sqlite3", dataSourceName)
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
+}
+
+func InitDB(dataSourceName string) {
+	db, err := NewDB(dataSourceName)
 	if err != nil {
 		panic(err)
 	}
