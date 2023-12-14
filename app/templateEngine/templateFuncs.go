@@ -3,7 +3,7 @@ package minitemp
 import (
 	"html/template"
 
-	templatefuncs "github.com/6oof/chewbie/app/templateEngine/funcs"
+	templatefuncs "github.com/6oof/miniweb-base/app/templateEngine/funcs"
 )
 
 var CustomTemplateFuncs = template.FuncMap{

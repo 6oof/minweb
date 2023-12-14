@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 
-	"github.com/6oof/chewbie/database/sqlc"
+	"github.com/6oof/miniweb-base/database/sqlc"
 	_ "github.com/mattn/go-sqlite3"
 )
 

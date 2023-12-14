@@ -3,8 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	minitemp "github.com/6oof/chewbie/app/templateEngine"
-	_ "github.com/mattn/go-sqlite3"
+	minitemp "github.com/6oof/miniweb-base/app/templateEngine"
 )
 
 func HandleIndex(w http.ResponseWriter, r *http.Request) {
