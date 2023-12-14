@@ -37,11 +37,11 @@ func MbinInit() *MiniWeb {
 	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	RegisterRoutes(r)
 	// Apply CSRF protection to all routes
-	Chewbie := &MiniWeb{
+	miniWeb := &MiniWeb{
 		Router: r,
 	}
 
-	return Chewbie
+	return miniWeb
 }
 
 func compressResponseMiddleware(next http.Handler) http.Handler {
