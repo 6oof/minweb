@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/6oof/chewbie/app/stubs"
-	"github.com/6oof/chewbie/db"
+	"github.com/6oof/chewbie/app"
+	db "github.com/6oof/chewbie/database"
 )
 
 func main() {
 	db.InitDB("hello.db")
-	stubs.MbinServe(":3334")
+	app.MbinServe(":3033")
 }

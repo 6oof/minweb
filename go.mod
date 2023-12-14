@@ -3,6 +3,7 @@ module github.com/6oof/chewbie
 go 1.20
 
 require (
+	github.com/go-chi/chi/v5 v5.0.10
 	github.com/go-playground/validator/v10 v10.16.0
 	github.com/gorilla/csrf v1.7.2
 	github.com/gorilla/handlers v1.5.2
