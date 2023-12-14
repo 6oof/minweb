@@ -1,5 +1,4 @@
-// helpers/filestorage.go
-package helpers
+package stubs
 
 import (
 	"fmt"
