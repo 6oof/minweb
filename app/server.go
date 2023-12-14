@@ -1,4 +1,4 @@
-package stubs
+package app
 
 import (
 	"context"
@@ -9,22 +9,23 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/6oof/chewbie/app"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 )
 
 type MiniWeb struct {
-	Router *mux.Router
+	Router *chi.Mux
 }
 
 func MbinInit() *MiniWeb {
-	r := mux.NewRouter()
 
-	r.Use(panicRecoverMiddleware)
-	r.Use(loggingMiddleware)
+	r := chi.NewRouter()
+
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.Logger)
 	r.Use(compressResponseMiddleware)
 
 	// CSRF protection
@@ -33,22 +34,14 @@ func MbinInit() *MiniWeb {
 	r.Use(csrfMiddleware)
 
 	// Add your routes as needed
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	app.RegisterRoutes(r)
+	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	RegisterRoutes(r)
 	// Apply CSRF protection to all routes
 	Chewbie := &MiniWeb{
 		Router: r,
 	}
 
 	return Chewbie
-}
-
-func loggingMiddleware(next http.Handler) http.Handler {
-	return handlers.CombinedLoggingHandler(os.Stdout, next)
-}
-
-func panicRecoverMiddleware(next http.Handler) http.Handler {
-	return handlers.RecoveryHandler()(next)
 }
 
 func compressResponseMiddleware(next http.Handler) http.Handler {
