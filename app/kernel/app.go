@@ -1,4 +1,4 @@
-package app
+package kernel
 
 import (
 	"context"
@@ -10,11 +10,11 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/6oof/minweb/app/configs"
 	"github.com/6oof/minweb/app/helpers"
+	"github.com/6oof/minweb/app/middleware"
+	"github.com/6oof/minweb/app/router"
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/cors"
-	"github.com/gorilla/csrf"
 )
 
 // MiniWeb represents the main structure for the MiniWeb application, including its router.
@@ -27,39 +27,17 @@ func MbinInit() *MiniWeb {
 	r := chi.NewRouter()
 
 	// Middleware setup
-	r.Use(middleware.Logger)
-	r.Use(middleware.Recoverer)
-
-	// CORS protection
-	corsMiddleware := cors.Handler(cors.Options{
-		AllowedOrigins:   []string{helpers.Env("URL", "*")}, // Use this to allow specific origin hosts
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		ExposedHeaders:   []string{"Link"},
-		AllowCredentials: false,
-		MaxAge:           300,
-		// Debug:            true,
-	})
-	r.Use(corsMiddleware)
-
-	// CSRF protection
-	key := []byte(helpers.EnvOrPanic("KEY"))
-	if len(key) < 1 {
-		panic("App key must be set in .env file")
-	}
-	csrfMiddleware := csrf.Protect([]byte(key),
-		csrf.Secure(false),
-		csrf.ErrorHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.WriteHeader(http.StatusForbidden)
-			w.Write([]byte(`{"message": "Forbidden - CSRF token invalid"}`))
-		}))) // Set Secure to true in production
-	r.Use(csrfMiddleware)
+	r.Use(middleware.Logger())
+	r.Use(middleware.Recoverer())
+	r.Use(middleware.Cors())
 
 	// Static file serving
 	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// Register custom routes
-	registerRoutes(r)
+	router.RegisterWebRoutes(r)
+	router.RegisterApiRoutes(r)
+	router.RegisterFragmentRoutes(r)
 
 	// Apply CSRF protection to all routes
 	miniWeb := &MiniWeb{
@@ -74,13 +52,9 @@ func MbinServe(port string) {
 	c := MbinInit()
 
 	// Create a server with timeouts
-	server := &http.Server{
-		Addr:         port,
-		WriteTimeout: time.Second * 15,
-		ReadTimeout:  time.Second * 15,
-		IdleTimeout:  time.Second * 60,
-		Handler:      c.Router,
-	}
+	server := configs.ServerConfig()
+	server.Addr = port
+	server.Handler = c.Router
 
 	appPort := helpers.Env("PORT", "8080")
 

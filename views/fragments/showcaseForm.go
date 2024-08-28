@@ -1,8 +1,9 @@
-package components
+package fragments
 
 import (
 	"net/http"
 
+	"github.com/6oof/minweb/views/components"
 	"github.com/6oof/xxhtml/x"
 )
 
@@ -13,9 +14,9 @@ type ShowcaseFormResult struct {
 
 func ShowcaseForm(r *http.Request, fdata ShowcaseFormResult) x.Elem {
 	return x.Div(`class="mt-8" id="result" hx-swap="outerHTML"`,
-		x.Form(`class="max-w-sm mx-auto" hx-post="/showcase-form" hx-target="#result"`,
+		x.Form(`class="max-w-sm mx-auto" hx-post="/!fragment/showcase-form" hx-target="#result"`,
 			x.Div(`class="mb-5"`,
-				CSRF(r),
+				components.CSRF(r),
 				x.Label(`for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"`,
 					x.C(`A quick and dirty example of HTMX Tailwind and MinWeb working together`),
 				), x.Input(`type="text" id="name"`+x.STER(fdata.NameError != "",
@@ -37,4 +38,28 @@ func ShowcaseForm(r *http.Request, fdata ShowcaseFormResult) x.Elem {
 			),
 		),
 	)
+}
+
+func HandleShowcaseFormPost(w http.ResponseWriter, r *http.Request) {
+
+	err := r.ParseForm()
+
+	if err != nil {
+		http.Error(w, "Sorry, something went wrong", http.StatusInternalServerError)
+	}
+
+	data := ShowcaseFormResult{}
+
+	if len(r.PostForm.Get("Name")) < 1 {
+		data.NameError = "Name is required"
+	} else {
+		if r.PostForm.Get("Name") == "Bruce Wayne" {
+			data.Result = "You're Batman"
+		} else {
+			data.Result = "You're not Batman"
+		}
+	}
+
+	w.Write(ShowcaseForm(r, data).Render())
+
 }

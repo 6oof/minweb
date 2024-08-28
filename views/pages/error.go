@@ -1,6 +1,8 @@
 package pages
 
 import (
+	"net/http"
+
 	"github.com/6oof/minweb/app/helpers"
 	"github.com/6oof/minweb/views"
 	"github.com/6oof/minweb/views/layouts"
@@ -28,4 +30,8 @@ func ErrorPage(code int, message string) x.Elem {
 			),
 		),
 	)
+}
+
+func HandleNotFound(w http.ResponseWriter, r *http.Request) {
+	w.Write(ErrorPage(404, "The page you are looking for does not exist.").Render())
 }

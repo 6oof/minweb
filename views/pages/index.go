@@ -5,12 +5,12 @@ import (
 
 	"github.com/6oof/minweb/app/helpers"
 	"github.com/6oof/minweb/views"
-	"github.com/6oof/minweb/views/components"
+	"github.com/6oof/minweb/views/fragments"
 	"github.com/6oof/minweb/views/layouts"
 	"github.com/6oof/xxhtml/x"
 )
 
-func IndexPage(r *http.Request, fdata components.ShowcaseFormResult) x.Elem {
+func IndexPage(r *http.Request, fdata fragments.ShowcaseFormResult) x.Elem {
 	return layouts.Layout(views.SuperGlopabls(helpers.BaseSeo()),
 		x.Section(`class="bg-white dark:bg-gray-900 text-center mt-16"`,
 			x.Div(`class="grid max-w-screen-xl px-4 py-8 mx-auto"`,
@@ -25,9 +25,20 @@ func IndexPage(r *http.Request, fdata components.ShowcaseFormResult) x.Elem {
 							x.E("path", `fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"`),
 						),
 					),
-					components.ShowcaseForm(r, fdata),
+					fragments.ShowcaseForm(r, fdata),
 				),
 			),
 		),
 	)
+}
+
+// HandleIndex is the handler function for the "/" route, rendering the home page.
+func HandleIndex(w http.ResponseWriter, r *http.Request) {
+
+	fdata := fragments.ShowcaseFormResult{
+		NameError: "",
+		Result:    "",
+	}
+
+	w.Write(IndexPage(r, fdata).Render())
 }
