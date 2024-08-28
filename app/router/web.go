@@ -8,6 +8,7 @@ import (
 
 func RegisterWebRoutes(r *chi.Mux) {
 	r.Group(func(r chi.Router) {
+		r.Use(middleware.DevPanicPrint)
 		r.Use(middleware.Csrf())
 
 		// register all web routes below

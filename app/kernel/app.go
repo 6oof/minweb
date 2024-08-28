@@ -29,7 +29,6 @@ func MbinInit() *MiniWeb {
 	// Middleware setup
 	r.Use(middleware.Logger())
 	r.Use(middleware.Recoverer())
-	r.Use(middleware.DevPanicPrint)
 	r.Use(middleware.Cors())
 
 	// Static file serving
