@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/6oof/minweb/app/handlers"
+	"github.com/6oof/minweb/app/api"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -11,10 +11,10 @@ func RegisterApiRoutes(r *chi.Mux) {
 		r.Route("/api", func(r chi.Router) {
 
 			//register all api routes below
-			r.Get("/", handlers.HandleIndex)
+			r.Get("/", api.HeartbeatHandler)
 
 			// 404 route
-			r.Get("/*", handlers.HandleNotFound)
+			r.Get("/*", api.NotFoundHandler)
 		})
 	})
 

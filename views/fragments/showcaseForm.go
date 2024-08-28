@@ -41,7 +41,6 @@ func ShowcaseForm(r *http.Request, fdata ShowcaseFormResult) x.Elem {
 }
 
 func HandleShowcaseFormPost(w http.ResponseWriter, r *http.Request) {
-
 	err := r.ParseForm()
 
 	if err != nil {
