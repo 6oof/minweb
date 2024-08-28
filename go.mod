@@ -1,8 +1,11 @@
 module github.com/6oof/minweb
 
-go 1.20
+go 1.22.0
+
+toolchain go1.23.0
 
 require (
+	github.com/6oof/xxhtml v1.6.1
 	github.com/davecgh/go-spew v1.1.1
 	github.com/go-chi/chi/v5 v5.0.11
 	github.com/go-chi/cors v1.2.1
