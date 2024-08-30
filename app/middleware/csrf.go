@@ -1,15 +1,17 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
-	"github.com/6oof/minweb/app/helpers"
+	"github.com/6oof/minweb/app"
 	"github.com/gorilla/csrf"
 )
 
 func Csrf() func(next http.Handler) http.Handler {
+	fmt.Println(app.Get().Config().GetOrPanic("KEY"))
 	// CSRF protection
-	key := []byte(helpers.EnvOrPanic("KEY"))
+	key := []byte(app.Get().Config().GetOrPanic("KEY"))
 	if len(key) < 1 {
 		panic("App key must be set in .env file")
 	}

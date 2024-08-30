@@ -13,31 +13,50 @@ type ShowcaseFormResult struct {
 }
 
 func ShowcaseForm(r *http.Request, fdata ShowcaseFormResult) x.Elem {
-	return x.Div(`class="mt-8" id="result" hx-swap="outerHTML"`,
-		x.Form(`class="max-w-sm mx-auto" hx-post="/!fragment/showcase-form" hx-target="#result"`,
-			x.Div(`class="mb-5"`,
+	return x.Div(x.Class("mt-8"), x.Att("id", "result"), x.Att("hx-swap", "outerHTML"),
+		x.Form(x.Class("max-w-sm mx-auto"), x.Att("hx-post", "/!fragment/showcase-form"), x.Att("hx-target", "#result"),
+			x.Div(
+				x.Class("mb-5"),
 				components.CSRF(r),
-				x.Label(`for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"`,
-					x.C(`A quick and dirty example of HTMX Tailwind and MinWeb working together`),
-				), x.Input(`type="text" id="name"`+x.STER(fdata.NameError != "",
-					`class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400"`,
-					`class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary dark:focus:border-primary"`)+`placeholder="Bruce Wayne" name="Name"`),
-				x.IF(fdata.NameError != "",
-					x.Div(`class="text-red-700"`,
+				x.Label(
+					x.Att("for", "name"),
+					x.Class("block mb-2 text-sm font-medium text-gray-900 dark:text-white"),
+					x.C("A quick and dirty example of HTMX Tailwind and MinWeb working together"),
+				),
+				x.Input(
+					x.Att("type", "text"),
+					x.Att("id", "name"),
+					x.Class(x.STER(
+						fdata.NameError != "",
+						`bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400`,
+						`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary dark:focus:border-primary`,
+					)),
+					x.Att("placeholder", "Bruce Wayne"),
+					x.Att("name", "Name"),
+				),
+				x.IF(
+					fdata.NameError != "",
+					x.Div(
+						x.Class("text-red-700"),
 						x.C(fdata.NameError),
 					),
 				),
 			),
-			x.Button(`type="submit" class="text-white bg-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-primary dark:focus:ring-primary"`,
-				x.C(`Dispatch`),
+			x.Button(
+				x.Att("type", "submit"),
+				x.Class("text-white bg-primary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-primary font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-primary dark:hover:bg-primary dark:focus:ring-primary"),
+				x.C("Dispatch"),
 			),
 		),
-		x.IF(fdata.Result != "",
-			x.Div(`class="text-xl text-white mt-8"`,
+		x.IF(
+			fdata.Result != "",
+			x.Div(
+				x.Class("text-xl text-white mt-8"),
 				x.C(fdata.Result),
 			),
 		),
 	)
+
 }
 
 func HandleShowcaseFormPost(w http.ResponseWriter, r *http.Request) {

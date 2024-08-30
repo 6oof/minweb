@@ -12,51 +12,18 @@ import (
 
 	"github.com/6oof/minweb/app/configs"
 	"github.com/6oof/minweb/app/helpers"
-	"github.com/6oof/minweb/app/middleware"
-	"github.com/6oof/minweb/app/router"
 	"github.com/go-chi/chi/v5"
 )
 
-// MiniWeb represents the main structure for the MiniWeb application, including its router.
-type MiniWeb struct {
-	Router *chi.Mux
-}
+// Serve starts the MiniWeb server with specified configurations.
+func Serve(mux *chi.Mux) {
 
-// MbinInit initializes the MiniWeb application, sets up middleware, and registers routes.
-func MbinInit() *MiniWeb {
-	r := chi.NewRouter()
-
-	// Middleware setup
-	r.Use(middleware.Logger())
-	r.Use(middleware.Recoverer())
-	r.Use(middleware.Cors())
-
-	// Static file serving
-	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-
-	// Register custom routes
-	router.RegisterWebRoutes(r)
-	router.RegisterApiRoutes(r)
-	router.RegisterFragmentRoutes(r)
-
-	// Apply CSRF protection to all routes
-	miniWeb := &MiniWeb{
-		Router: r,
-	}
-
-	return miniWeb
-}
-
-// MbinServe starts the MiniWeb server with specified configurations.
-func MbinServe(port string) {
-	c := MbinInit()
-
+	appPort := fmt.Sprintf(":%s", helpers.Env("PORT", "3003"))
 	// Create a server with timeouts
-	server := configs.ServerConfig()
-	server.Addr = port
-	server.Handler = c.Router
 
-	appPort := helpers.Env("PORT", "8080")
+	server := configs.ServerConfig()
+	server.Addr = appPort
+	server.Handler = mux
 
 	// Listen for syscall signals for process to interrupt/quit
 	sig := make(chan os.Signal, 1)

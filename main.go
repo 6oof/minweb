@@ -1,29 +1,22 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/6oof/minweb/app/helpers"
-	"github.com/6oof/minweb/app/kernel"
-	// Uncomment line below to use the default database file (1/2)
-	// db "github.com/6oof/minweb/database"
+	"github.com/6oof/minweb/app"
+	"github.com/6oof/minweb/router"
 )
 
+// Uncomment line below to use the default database file (1/2)
+// db "github.com/6oof/minweb/database"
+
 func main() {
-	// Load environment variables from the .env file
-	helpers.LoadEnv()
-
-	// Int logger
-	helpers.InitLogger("log.txt")
-
-	// Get the application port from the environment variables or panic if not set
-	appPort := helpers.Env("PORT", ":3003")
-
 	// Initialize the database with the specified file
 	// uncomment line line below to use the default database file (2/2)
 	// db.InitDB("mw.db")
 	// Follow instructions in the documentation to migrate and generate queries
 
-	// Start the MiniWeb server
-	kernel.MbinServe(fmt.Sprintf(":%s", appPort))
+	// Boot the app
+	app.Boot()
+
+	// Start the app instance
+	app.Get().Start(router.Base())
 }

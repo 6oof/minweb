@@ -62,47 +62,54 @@ func DevPanicPrint(next http.Handler) http.Handler {
 func debugPage(strace string, time string, url string, method string, rvr interface{}) x.Elem {
 	return layouts.Empty(
 		views.SuperGlopabls(helpers.BaseSeo()),
-		x.E("", "",
-			x.Div(`class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow p-6 m-8"`,
-				x.Div(`class="mb-4"`,
-					x.H1(`class="text-2xl font-semibold leading-6 text-red-900"`,
-						x.C(`500 Internal Server Error`),
+		x.E(
+			"",
+			x.Div(x.Class("divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow p-6 m-8"),
+				x.Div(x.Class("mb-4"),
+					x.H1(x.Class("text-2xl font-semibold leading-6 text-red-900"),
+						x.C("500 Internal Server Error"),
 					),
 				),
-
-				x.Div(`class="pt-4"`,
-					x.Div(`class="details bg-gray-100 p-4 rounded-lg"`,
-						x.P("",
-							x.E("strong", "",
-								x.C(`Panic:`),
+				x.Div(x.Class("pt-4"),
+					x.Div(x.Class("details bg-gray-100 p-4 rounded-lg"),
+						x.P(
+							x.E(
+								"strong",
+								x.C("Panic:"),
 							),
 						),
-
-						x.P("", x.CR(template.HTMLEscapeString(fmt.Sprintf("%v", rvr)))),
-						x.P("",
-							x.E("strong", "",
-								x.C(`Request URL:`),
+						x.P(
+							x.CR(template.HTMLEscapeString(fmt.Sprintf("%v", rvr))),
+						),
+						x.P(
+							x.E(
+								"strong",
+								x.C("Request URL:"),
 							),
 							x.C(url),
 						),
-						x.P("",
-							x.E("strong", "",
-								x.C(`Request Method:`),
+						x.P(
+							x.E(
+								"strong",
+								x.C("Request Method:"),
 							),
 							x.C(method),
 						),
-						x.P("",
-							x.E("strong", "",
-								x.C(`Timestamp:`),
+						x.P(
+							x.E(
+								"strong",
+								x.C("Timestamp:"),
 							),
 							x.C(time),
 						),
-						x.P(`class="mb-4"`,
-							x.E("strong", "",
-								x.C(`Stack Trace:`),
+						x.P(
+							x.Class("mb-4"),
+							x.E(
+								"strong",
+								x.C("Stack Trace:"),
 							),
 						),
-						x.Div(`class="bg-gray-800 text-white rounded break-words overflow-x-auto"`,
+						x.Div(x.Class("bg-gray-800 text-white rounded break-words overflow-x-auto"),
 							x.ERAW(strace),
 						),
 					),
