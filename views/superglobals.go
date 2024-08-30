@@ -17,9 +17,6 @@ type Seo struct {
 
 	// Keywords are the meta keywords for the web page.
 	Keywords string
-
-	// Ready is a flag indicating whether the SEO data is ready to be used.
-	Ready bool
 }
 
 func SuperGlopabls(seo Seo) x.Elem {
