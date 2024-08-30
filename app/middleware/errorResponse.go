@@ -9,6 +9,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/6oof/minweb/app"
 	"github.com/6oof/minweb/app/helpers"
 	"github.com/6oof/minweb/views"
 	"github.com/6oof/minweb/views/layouts"
@@ -33,7 +34,7 @@ func DevPanicPrint(next http.Handler) http.Handler {
 					panic(rvr)
 				}
 
-				env := helpers.Env("ENVIROMENT", "prod")
+				env := app.Config().Get("ENVIROMENT")
 				if env == "dev" {
 					// Detailed error response for development environment
 					w.WriteHeader(http.StatusInternalServerError)

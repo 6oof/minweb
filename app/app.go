@@ -5,35 +5,36 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-type Application struct {
+type application struct {
 	mux     *chi.Mux
 	logger  kernel.LoggerInterface
 	configs *kernel.Config
 }
 
-var app *Application
+var app *application
 
 // Boot initializes the application.
 func Boot() {
-	app = &Application{}
+	app = &application{}
 	//Initialize configuration
 	config := kernel.InitConfig()
 	app.configs = config
 
 	// Create an instance of AppLogger
 	appLogger := &kernel.AppLogger{}
-	appLogger.Boot() // Boot the logger to initialize it
+	appLogger.Boot(config.GetOrPanic("LOGGER_FILE")) // Boot the logger to initialize it
 	app.logger = appLogger
 }
 
-func (app *Application) Start(r *chi.Mux) {
+func (app *application) Start(r *chi.Mux) {
+	//set mux
 	app.mux = r
 
 	// Start the server
-	kernel.Serve(app.mux)
+	kernel.Serve(app.mux, app.configs.GetOrPanic("PORT"))
 }
 
-func Get() *Application {
+func Get() *application {
 	return app
 }
 

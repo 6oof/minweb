@@ -4,8 +4,6 @@ import (
 	"log"
 	"os"
 	"sync"
-
-	"github.com/6oof/minweb/app/configs"
 )
 
 type AppLogger struct {
@@ -15,10 +13,9 @@ type AppLogger struct {
 }
 
 // Boot initializes the logger by setting up the log file.
-func (l *AppLogger) Boot() {
-	lc := configs.LoggerConfig()
+func (l *AppLogger) Boot(lf string) {
 	l.once.Do(func() {
-		logFile, err := os.OpenFile(lc.File, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+		logFile, err := os.OpenFile(lf, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 		if err != nil {
 			log.Fatal(err)
 		}

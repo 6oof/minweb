@@ -11,14 +11,13 @@ import (
 	"time"
 
 	"github.com/6oof/minweb/app/configs"
-	"github.com/6oof/minweb/app/helpers"
 	"github.com/go-chi/chi/v5"
 )
 
 // Serve starts the MiniWeb server with specified configurations.
-func Serve(mux *chi.Mux) {
+func Serve(mux *chi.Mux, port string) {
 
-	appPort := fmt.Sprintf(":%s", helpers.Env("PORT", "3003"))
+	appPort := fmt.Sprintf(port)
 	// Create a server with timeouts
 
 	server := configs.ServerConfig()

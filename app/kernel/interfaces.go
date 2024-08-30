@@ -1,7 +1,7 @@
 package kernel
 
 type LoggerInterface interface {
-	Boot()
+	Boot(lf string)
 	LogInfo(message string)
 	LogError(err error, message string)
 }

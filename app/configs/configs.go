@@ -29,13 +29,3 @@ func ServerConfig() *http.Server {
 		IdleTimeout:  time.Second * time.Duration(viper.GetInt("SERVER_IDLE_TIMEOUT")),
 	}
 }
-
-type loggerConfig struct {
-	File string
-}
-
-func LoggerConfig() *loggerConfig {
-	return &loggerConfig{
-		File: viper.GetString("LOGGER_FILE"),
-	}
-}

@@ -3,7 +3,7 @@ package layouts
 import (
 	"time"
 
-	"github.com/6oof/minweb/app/helpers"
+	"github.com/6oof/minweb/app"
 	"github.com/6oof/xxhtml/x"
 )
 
@@ -32,7 +32,7 @@ func Layout(SuperGlobals x.Elem, Content x.Elem) x.Elem {
 							x.A(
 								x.Att("href", "/"),
 								x.Class("hover:underline"),
-								x.C(helpers.Env("NAME", "MiniWeb")),
+								x.C(app.Config().Get("NAME")),
 							),
 							x.C(". All Rights Reserved."),
 						),

@@ -1,11 +1,28 @@
 package views
 
 import (
-	"github.com/6oof/minweb/app/helpers"
 	"github.com/6oof/xxhtml/x"
 )
 
-func SuperGlopabls(seo helpers.Seo) x.Elem {
+// Seo represents the SEO (Search Engine Optimization) metadata for a web page.
+type Seo struct {
+	// Name is the name of the web page.
+	Name string
+
+	// Title is the title of the web page.
+	Title string
+
+	// Description is the meta description for the web page.
+	Description string
+
+	// Keywords are the meta keywords for the web page.
+	Keywords string
+
+	// Ready is a flag indicating whether the SEO data is ready to be used.
+	Ready bool
+}
+
+func SuperGlopabls(seo Seo) x.Elem {
 	return x.E(
 		"",
 		x.Title(
