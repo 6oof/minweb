@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/6oof/minweb/cmd/tui/xxhtml"
+	"github.com/6oof/minweb/app/kernel/cmd/tui/xxhtml"
 	"github.com/charmbracelet/huh"
 )
 

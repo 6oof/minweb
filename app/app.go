@@ -38,11 +38,11 @@ func Get() *Application {
 }
 
 // Log provides access to the logger for logging messages from anywhere in the app.
-func (a *Application) Log() kernel.LoggerInterface {
-	return a.logger
+func Log() kernel.LoggerInterface {
+	return app.logger
 }
 
 // Config provides access to configuration values.
-func (a *Application) Config() *kernel.Config {
-	return a.configs
+func Config() *kernel.Config {
+	return app.configs
 }
