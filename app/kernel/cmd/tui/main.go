@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/6oof/minweb/app/kernel/cmd/tui/migrations"
+	projectpackage "github.com/6oof/minweb/app/kernel/cmd/tui/projectPackage"
 	"github.com/6oof/minweb/app/kernel/cmd/tui/xxhtml"
 	"github.com/charmbracelet/huh"
 )
@@ -22,6 +23,8 @@ func main() {
 				Options(
 					huh.NewOption("Transform HTML to XXHTML", 1),
 					huh.NewOption("Migrations", 2),
+
+					huh.NewOption("Rename project module", 5),
 				).
 				Value(&op), // store the chosen option in the "burger" variable
 		),
@@ -37,6 +40,8 @@ func main() {
 		xxhtml.Run()
 	case 2:
 		migrations.Run()
+	case 5:
+		projectpackage.Run()
 	default:
 		fmt.Println("No option selected")
 	}
