@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/6oof/minweb/app/kernel/cmd/tui/migrations"
 	"github.com/6oof/minweb/app/kernel/cmd/tui/xxhtml"
 	"github.com/charmbracelet/huh"
 )
@@ -20,7 +21,7 @@ func main() {
 				Title("Select operation:").
 				Options(
 					huh.NewOption("Transform HTML to XXHTML", 1),
-					huh.NewOption("MAKE", 2),
+					huh.NewOption("Migrations", 2),
 				).
 				Value(&op), // store the chosen option in the "burger" variable
 		),
@@ -34,6 +35,8 @@ func main() {
 	switch o := op; o {
 	case 1:
 		xxhtml.Run()
+	case 2:
+		migrations.Run()
 	default:
 		fmt.Println("No option selected")
 	}

@@ -52,6 +52,7 @@ func IndexPage(r *http.Request, fdata fragments.ShowcaseFormResult) x.Elem {
 
 // HandleIndex is the handler function for the "/" route, rendering the home page.
 func HandleIndex(w http.ResponseWriter, r *http.Request) {
+
 	fdata := fragments.ShowcaseFormResult{
 		NameError: "",
 		Result:    "",
