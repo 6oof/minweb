@@ -1,4 +1,4 @@
-package kernel
+package services
 
 import (
 	"fmt"
@@ -7,12 +7,6 @@ import (
 )
 
 // StorageInterface defines the methods for interacting with file storage systems.
-type StorageInterface interface {
-	Put(filePath string, content []byte) error
-	Get(filePath string) ([]byte, error)
-	Delete(filePath string) error
-	Exists(filePath string) (bool, error)
-}
 
 type LocalStorage struct {
 	rootPath string

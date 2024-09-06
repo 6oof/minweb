@@ -1,7 +1,8 @@
 package app
 
 import (
-	"github.com/6oof/minweb/app/kernel"
+	"github.com/6oof/minweb/app/server"
+	"github.com/6oof/minweb/app/services"
 	"github.com/6oof/minweb/database"
 	"github.com/go-chi/chi/v5"
 	"github.com/uptrace/bun"
@@ -15,7 +16,7 @@ import (
 //
 // general Info:
 //
-// 1. Fields in the `application` struct that use kernel interfaces (e.g., logger, storage) should generally not be switched out
+// 1. Fields in the `application` struct that use services interfaces (e.g., logger, storage) should generally not be switched out
 //    unless absolutely necessary. This ensures consistency and reliability of core components.
 // 2. To add additional services to the framework:
 //    a. Add a new field to the `application` struct for the service.
@@ -26,17 +27,17 @@ import (
 //
 // All services can be found in app/services and should never depend on the app package.
 
-var app *application
+var app *Application
 
-// application container
-type application struct {
+// Application container
+type Application struct {
 	mux            *chi.Mux
 	database       *bun.DB
-	configs        kernel.ConfigInterface
-	logger         kernel.LoggerInterface
-	sessionStore   kernel.StoreInterface
-	storage        kernel.StorageInterface
-	privateStorage kernel.StorageInterface
+	configs        services.ConfigInterface
+	logger         services.LoggerInterface
+	sessionStore   services.StoreInterface
+	storage        services.StorageInterface
+	privateStorage services.StorageInterface
 	booted         bool // Indicates if the application has been initialized
 }
 
@@ -49,24 +50,25 @@ type application struct {
 // Ensure to follow this structure to maintain consistency and avoid issues during initialization.
 
 func Boot() {
-	app = &application{}
+	app = &Application{}
 
-	cf := &kernel.Config{}
-	app.configs = cf.InitConfig()
+	cf := &services.Config{}
+	cf.InitConfig()
+	app.configs = cf
 
-	appLogger := &kernel.AppLogger{}
+	appLogger := &services.AppLogger{}
 	appLogger.Boot(app.configs.GetOrPanic("LOGGER_FILE"))
 	app.logger = appLogger
 
 	app.database = database.GetDb()
 
-	app.sessionStore = kernel.MakeCookieSessionStore(app.configs.Get("key"))
+	app.sessionStore = services.MakeCookieSessionStore(app.configs.Get("key"))
 
-	storage := &kernel.LocalStorage{}
+	storage := &services.LocalStorage{}
 	storage.Init(app.configs.GetOrPanic("STORAGE_PATH"))
 	app.storage = storage
 
-	privateStorage := &kernel.LocalStorage{}
+	privateStorage := &services.LocalStorage{}
 	privateStorage.Init(app.configs.GetOrPanic("PRIVATE_STORAGE_PATH"))
 	app.privateStorage = privateStorage
 
@@ -81,18 +83,18 @@ func Start(r *chi.Mux) {
 
 	app.mux = r
 
-	kernel.Serve(app.mux, ":"+app.configs.GetOrPanic("PORT"))
+	server.Serve(app.mux, ":"+app.configs.GetOrPanic("PORT"))
 }
 
 // Facade methods for accessing core components
 
 // Log provides access to the logger for logging messages from anywhere in the app
-func Log() kernel.LoggerInterface {
+func Log() services.LoggerInterface {
 	return app.logger
 }
 
 // Config provides access to configuration values
-func Config() kernel.ConfigInterface {
+func Config() services.ConfigInterface {
 	return app.configs
 }
 
@@ -102,16 +104,16 @@ func Database() *bun.DB {
 }
 
 // SessionStore provides access to the session store for managing user sessions
-func SessionStore() kernel.StoreInterface {
+func SessionStore() services.StoreInterface {
 	return app.sessionStore
 }
 
 // Storage provides access to the general storage instance for file storage
-func Storage() kernel.StorageInterface {
+func Storage() services.StorageInterface {
 	return app.storage
 }
 
 // PrivateStorage provides access to the private storage instance for sensitive files
-func PrivateStorage() kernel.StorageInterface {
+func PrivateStorage() services.StorageInterface {
 	return app.privateStorage
 }

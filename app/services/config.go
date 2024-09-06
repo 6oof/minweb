@@ -1,4 +1,4 @@
-package kernel
+package services
 
 import (
 	"fmt"
@@ -8,17 +8,11 @@ import (
 	"github.com/spf13/viper"
 )
 
-type ConfigInterface interface {
-	InitConfig() *Config
-	Get(key string) string
-	GetOrPanic(key string) string
-}
-
 // Config holds configuration methods.
 type Config struct{}
 
 // InitConfig initializes Viper for framework configuration management.
-func (c *Config) InitConfig() *Config {
+func (c *Config) InitConfig() {
 	// Define the filenames
 	envFile := ".env"
 	exampleFile := ".env.example"
@@ -52,7 +46,6 @@ func (c *Config) InitConfig() *Config {
 	// Set default values for configuration
 	configs.Defaults()
 
-	return c
 }
 
 // Get retrieves a configuration value by key.

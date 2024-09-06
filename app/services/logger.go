@@ -1,16 +1,10 @@
-package kernel
+package services
 
 import (
 	"log"
 	"os"
 	"sync"
 )
-
-type LoggerInterface interface {
-	Boot(lf string)
-	LogInfo(message string)
-	LogError(err error, message string)
-}
 
 type AppLogger struct {
 	logger *log.Logger

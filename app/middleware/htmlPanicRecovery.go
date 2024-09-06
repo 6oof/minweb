@@ -1,4 +1,4 @@
-package kernelmiddleware
+package middleware
 
 import (
 	"bytes"
