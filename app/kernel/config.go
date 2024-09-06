@@ -8,8 +8,17 @@ import (
 	"github.com/spf13/viper"
 )
 
+type ConfigInterface interface {
+	InitConfig() *Config
+	Get(key string) string
+	GetOrPanic(key string) string
+}
+
+// Config holds configuration methods.
+type Config struct{}
+
 // InitConfig initializes Viper for framework configuration management.
-func InitConfig() *Config {
+func (c *Config) InitConfig() *Config {
 	// Define the filenames
 	envFile := ".env"
 	exampleFile := ".env.example"
@@ -43,11 +52,8 @@ func InitConfig() *Config {
 	// Set default values for configuration
 	configs.Defaults()
 
-	return &Config{}
+	return c
 }
-
-// Config holds configuration methods.
-type Config struct{}
 
 // Get retrieves a configuration value by key.
 func (c *Config) Get(key string) string {

@@ -21,6 +21,7 @@ func Run() {
 		huh.NewGroup(
 			huh.NewInput().
 				Title("Enter the old module name").
+				Description("It's really just replacing every occurence of the string with another string and running go mod tidy after.").
 				Placeholder("e.g., github.com/yourusername/oldmodulename").
 				Value(&oldModuleName),
 			huh.NewInput().

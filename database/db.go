@@ -1,4 +1,4 @@
-package db
+package database
 
 import (
 	"database/sql"
@@ -9,7 +9,17 @@ import (
 )
 
 func GetDb() *bun.DB {
-	sqldb, err := sql.Open(sqliteshim.ShimName, "file::memory:?cache=shared")
+	sqldb, err := sql.Open(sqliteshim.ShimName, "file:mw.db?_journal_mode=WAL&_synchronous=NORMAL&_cache_size=10000&_foreign_keys=on")
+	if err != nil {
+		panic(err)
+	}
+
+	db := bun.NewDB(sqldb, sqlitedialect.New())
+	return db
+}
+
+func GetTestDb() *bun.DB {
+	sqldb, err := sql.Open(sqliteshim.ShimName, "file:mw.db?_journal_mode=WAL&_synchronous=NORMAL&_cache_size=10000&_foreign_keys=on")
 	if err != nil {
 		panic(err)
 	}

@@ -19,6 +19,8 @@ func Defaults() {
 	viper.SetDefault("NAME", "MinWeb")
 	viper.SetDefault("DESCRIPTION", "Example app created with MW")
 	viper.SetDefault("LOGGER_FILE", "log.txt")
+	viper.SetDefault("STORAGE_PATH", "storage/public")
+	viper.SetDefault("PRIVATE_STORAGE_PATH", "storage/private")
 }
 
 func ServerConfig() *http.Server {
