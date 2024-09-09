@@ -55,12 +55,11 @@ func Serve(mux *chi.Mux, port string) {
 	reset := "\033[0m"
 
 	fmt.Println("")
-	fmt.Printf("%s>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>%s\n", yellow, reset)
+	fmt.Printf("%s>>>>>>>>>>>>>>>%s\n", yellow, reset)
 	fmt.Printf("%s /\\  /\\\\  /\\  /%s\n", yellow, reset)
 	fmt.Printf("%s/  \\/  \\\\/  \\/%s\n", yellow, reset)
+	fmt.Printf("%s<<<<<<<<<<<<<<<%s\n", yellow, reset)
 	fmt.Printf("%sServer running on port %s%s (http://localhost:%s)\n", yellow, appPort, reset, appPort)
-	fmt.Println("Using docker-compose? visit http://localhost:8080)")
-	fmt.Printf("%s<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<%s\n", yellow, reset)
 	fmt.Println("")
 
 	// Block until an interrupt signal is received.

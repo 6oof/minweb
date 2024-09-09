@@ -1,4 +1,4 @@
-package services
+package storageService
 
 import (
 	"fmt"
@@ -10,6 +10,12 @@ import (
 
 type LocalStorage struct {
 	rootPath string
+}
+
+func Make(path string) *LocalStorage {
+	storage := &LocalStorage{}
+	storage.Init(path)
+	return storage
 }
 
 // Init initializes the local storage with the root directory.

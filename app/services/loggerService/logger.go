@@ -1,4 +1,4 @@
-package services
+package loggerService
 
 import (
 	"log"
@@ -10,6 +10,12 @@ type AppLogger struct {
 	logger *log.Logger
 	mu     sync.Mutex
 	once   sync.Once
+}
+
+func Make(filename string) *AppLogger {
+	al := &AppLogger{}
+	al.Boot(filename)
+	return al
 }
 
 // Boot initializes the logger by setting up the log file.

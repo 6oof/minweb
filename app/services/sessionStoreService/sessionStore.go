@@ -1,4 +1,4 @@
-package services
+package sessionStoreService
 
 import (
 	"github.com/gorilla/sessions"
@@ -8,6 +8,6 @@ import (
 //
 // See CookieStore and FilesystemStore for examples.
 
-func MakeCookieSessionStore(key string) *sessions.CookieStore {
+func Make(key string) *sessions.CookieStore {
 	return sessions.NewCookieStore([]byte(key))
 }

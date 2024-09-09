@@ -8,7 +8,7 @@ import (
 	"github.com/uptrace/bun/driver/sqliteshim"
 )
 
-func GetDb() *bun.DB {
+func Make() *bun.DB {
 	sqldb, err := sql.Open(sqliteshim.ShimName, "file:mw.db?_journal_mode=WAL&_synchronous=NORMAL&_cache_size=10000&_foreign_keys=on")
 	if err != nil {
 		panic(err)
@@ -18,7 +18,7 @@ func GetDb() *bun.DB {
 	return db
 }
 
-func GetTestDb() *bun.DB {
+func MakeTest() *bun.DB {
 	sqldb, err := sql.Open(sqliteshim.ShimName, "file:mw.db?_journal_mode=WAL&_synchronous=NORMAL&_cache_size=10000&_foreign_keys=on")
 	if err != nil {
 		panic(err)

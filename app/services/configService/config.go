@@ -1,4 +1,4 @@
-package services
+package configService
 
 import (
 	"fmt"
@@ -10,6 +10,12 @@ import (
 
 // Config holds configuration methods.
 type Config struct{}
+
+func Make() *Config {
+	cf := &Config{}
+	cf.InitConfig()
+	return cf
+}
 
 // InitConfig initializes Viper for framework configuration management.
 func (c *Config) InitConfig() {

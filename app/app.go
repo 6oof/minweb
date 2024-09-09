@@ -1,9 +1,13 @@
 package app
 
 import (
-	"github.com/6oof/minweb/app/server"
 	"github.com/6oof/minweb/app/services"
+	"github.com/6oof/minweb/app/services/configService"
+	"github.com/6oof/minweb/app/services/loggerService"
+	"github.com/6oof/minweb/app/services/sessionStoreService"
+	"github.com/6oof/minweb/app/services/storageService"
 	"github.com/6oof/minweb/database"
+	"github.com/6oof/minweb/server"
 	"github.com/go-chi/chi/v5"
 	"github.com/uptrace/bun"
 )
@@ -52,25 +56,17 @@ type Application struct {
 func Boot() {
 	app = &Application{}
 
-	cf := &services.Config{}
-	cf.InitConfig()
-	app.configs = cf
+	app.configs = configService.Make()
 
-	appLogger := &services.AppLogger{}
-	appLogger.Boot(app.configs.GetOrPanic("LOGGER_FILE"))
-	app.logger = appLogger
+	app.logger = loggerService.Make(app.configs.GetOrPanic("LOGGER_FILE"))
 
-	app.database = database.GetDb()
+	app.database = database.Make()
 
-	app.sessionStore = services.MakeCookieSessionStore(app.configs.Get("key"))
+	app.sessionStore = sessionStoreService.Make(app.configs.GetOrPanic("KEY"))
 
-	storage := &services.LocalStorage{}
-	storage.Init(app.configs.GetOrPanic("STORAGE_PATH"))
-	app.storage = storage
+	app.storage = storageService.Make(app.configs.GetOrPanic("STORAGE_PATH"))
 
-	privateStorage := &services.LocalStorage{}
-	privateStorage.Init(app.configs.GetOrPanic("PRIVATE_STORAGE_PATH"))
-	app.privateStorage = privateStorage
+	app.privateStorage = storageService.Make(app.configs.GetOrPanic("PRIVATE_STORAGE_PATH"))
 
 	app.booted = true
 }
